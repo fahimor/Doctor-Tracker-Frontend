@@ -1,0 +1,187 @@
+@import "tailwindcss";
+
+/* Class-based dark mode (toggled by next-themes on <html>). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Design tokens. Components only use these semantic names (bg-card,
+ * text-muted-foreground, ...), so light/dark themes are a change of values here.
+ */
+:root {
+  --background: oklch(0.985 0.003 247);
+  --foreground: oklch(0.21 0.03 264);
+  --card: oklch(1 0 0);
+  --card-foreground: var(--foreground);
+  --muted: oklch(0.965 0.006 247);
+  --muted-foreground: oklch(0.52 0.025 257);
+  --border: oklch(0.92 0.008 255);
+  --input: oklch(0.89 0.01 255);
+  --accent: oklch(0.96 0.012 190);
+  --accent-foreground: oklch(0.32 0.06 190);
+
+  --primary: oklch(0.56 0.105 186);
+  --primary-hover: oklch(0.5 0.1 186);
+  --primary-foreground: oklch(0.99 0.01 186);
+  --primary-soft: oklch(0.95 0.035 186);
+
+  --ring: oklch(0.65 0.11 186);
+  --destructive: oklch(0.58 0.2 25);
+  --destructive-soft: oklch(0.96 0.03 25);
+  --success: oklch(0.6 0.13 155);
+  --success-soft: oklch(0.96 0.04 155);
+  --warning: oklch(0.72 0.15 70);
+  --warning-soft: oklch(0.97 0.05 85);
+  --info: oklch(0.58 0.15 255);
+  --info-soft: oklch(0.96 0.025 255);
+
+  --chart-1: oklch(0.6 0.11 186);
+  --chart-2: oklch(0.58 0.16 265);
+  --chart-3: oklch(0.72 0.15 70);
+  --chart-4: oklch(0.62 0.19 25);
+  --chart-5: oklch(0.65 0.13 155);
+  --chart-6: oklch(0.6 0.16 315);
+  --chart-grid: oklch(0.93 0.006 255);
+
+  --sidebar: oklch(0.995 0.002 247);
+  --shadow-color: 220 30% 20%;
+}
+
+.dark {
+  --background: oklch(0.16 0.015 260);
+  --foreground: oklch(0.96 0.005 250);
+  --card: oklch(0.2 0.018 260);
+  --card-foreground: var(--foreground);
+  --muted: oklch(0.24 0.018 260);
+  --muted-foreground: oklch(0.7 0.02 255);
+  --border: oklch(0.29 0.02 260);
+  --input: oklch(0.34 0.02 260);
+  --accent: oklch(0.27 0.03 200);
+  --accent-foreground: oklch(0.9 0.05 186);
+
+  --primary: oklch(0.7 0.11 186);
+  --primary-hover: oklch(0.76 0.1 186);
+  --primary-foreground: oklch(0.18 0.03 200);
+  --primary-soft: oklch(0.3 0.05 190);
+
+  --ring: oklch(0.7 0.11 186);
+  --destructive: oklch(0.68 0.19 25);
+  --destructive-soft: oklch(0.3 0.07 25);
+  --success: oklch(0.72 0.14 155);
+  --success-soft: oklch(0.3 0.06 155);
+  --warning: oklch(0.8 0.14 75);
+  --warning-soft: oklch(0.32 0.06 75);
+  --info: oklch(0.7 0.13 255);
+  --info-soft: oklch(0.3 0.06 255);
+
+  --chart-1: oklch(0.72 0.11 186);
+  --chart-2: oklch(0.7 0.14 265);
+  --chart-3: oklch(0.8 0.14 75);
+  --chart-4: oklch(0.7 0.17 25);
+  --chart-5: oklch(0.74 0.13 155);
+  --chart-6: oklch(0.72 0.14 315);
+  --chart-grid: oklch(0.28 0.018 260);
+
+  --sidebar: oklch(0.18 0.016 260);
+  --shadow-color: 220 40% 2%;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-soft: var(--primary-soft);
+  --color-ring: var(--ring);
+  --color-destructive: var(--destructive);
+  --color-destructive-soft: var(--destructive-soft);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+  --color-sidebar: var(--sidebar);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-chart-6: var(--chart-6);
+
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  --shadow-card: 0 1px 2px hsl(var(--shadow-color) / 0.04), 0 4px 16px -4px hsl(var(--shadow-color) / 0.06);
+  --shadow-pop: 0 10px 38px -10px hsl(var(--shadow-color) / 0.25), 0 10px 20px -15px hsl(var(--shadow-color) / 0.2);
+
+  --animate-fade-in: fade-in 160ms ease-out;
+  --animate-slide-in-left: slide-in-left 220ms cubic-bezier(0.32, 0.72, 0, 1);
+  --animate-dialog-in: dialog-in 180ms cubic-bezier(0.32, 0.72, 0, 1);
+  --animate-progress: progress 1.1s ease-in-out infinite;
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes slide-in-left {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+  }
+  @keyframes dialog-in {
+    from { opacity: 0; transform: translateY(8px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes progress {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(250%); }
+  }
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    font-feature-settings: "cv11", "ss01";
+  }
+  ::selection {
+    background: var(--primary-soft);
+  }
+  /* Native <dialog> backdrop */
+  dialog::backdrop {
+    background: oklch(0.2 0.02 260 / 0.45);
+    backdrop-filter: blur(2px);
+    animation: fade-in 160ms ease-out;
+  }
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    opacity: 0.55;
+    cursor: pointer;
+  }
+  .dark input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
