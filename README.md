@@ -2,6 +2,8 @@
 
 > This repository is the **Next.js frontend**. The REST API lives in **[Doctor-Tracker-Backend](https://github.com/fahimor/Doctor-Tracker-Backend)**.
 
+**Live demo:** <https://doctortrackerr.vercel.app> (sign in with one of the demo accounts below) · **API:** <https://doctor-tracker-api-962014877339.asia-south1.run.app/health>
+
 ![Dashboard](docs/screenshots/desktop-dashboard.png)
 
 ## Description
@@ -13,7 +15,7 @@
 | **Frontend** | Next.js 16 (App Router, Cache Components), React 19, TypeScript, Tailwind CSS 4, TanStack Query 5, React Hook Form + Zod, Recharts |
 | **Backend** | Node.js 24, Express 5, TypeScript, Mongoose 9, Zod 4, JWT (httpOnly cookie), bcrypt, Helmet, rate limiting, Pino |
 | **Database** | MongoDB (Atlas in production) |
-| **Testing** | Vitest + Supertest + mongodb-memory-server (20 API integration tests, including query-plan checks) |
+| **Testing** | Vitest + Supertest + mongodb-memory-server (24 API integration tests, including query-plan checks) |
 | **Hosting** | Vercel (frontend) · Google Cloud Run (backend, Docker) · MongoDB Atlas |
 
 **Demo accounts** (created by the seed script):
@@ -108,7 +110,7 @@ Open <http://localhost:3000> and sign in with a demo account. The login page has
 ### 5. Tests and production builds
 
 ```bash
-cd backend  && npm test && npm run build      # 20 integration tests, then tsc build
+cd backend  && npm test && npm run build      # 24 integration tests, then tsc build
 cd frontend && npm run lint && npm run build  # ESLint, then Next.js production build
 ```
 
