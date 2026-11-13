@@ -25,10 +25,19 @@
 
 ---
 
+## Design
+
+The interface is designed as a ward's case file rather than a generic SaaS dashboard:
+
+- **Palette:** paper and white sheets, ink text, and a deep ward green taken from Bangladesh's national green. Red is reserved for critical patients, and patient conditions use triage colours (critical, under observation, recovering, stable, discharged) wherever they appear.
+- **Type:** [Atkinson Hyperlegible Next](https://www.brailleinstitute.org/freefont/) for all UI text. It was designed by the Braille Institute for low-vision readers, and its distinct 0/O and 1/l help with phone numbers and IDs. Condensed *Archivo* is used for page titles and census numbers, like a ward census board.
+- **Layout:** a green navigation rail whose active item is a folder tab running into the page. On mobile this becomes a bottom tab bar. Hierarchy comes from hairline rules and spacing, not shadows.
+- **Signature:** admissions are plotted as a trace on ECG chart paper (millimetre grid, ink line, critical cases in red). It prints once, left to right, on load and respects reduced-motion settings.
+
 ## Features
 
 - **Authentication**: login with an httpOnly JWT cookie, every page protected by `proxy.ts`, every API route protected by middleware, admin/viewer roles, brute-force rate limiting, and automatic redirect to login when the session expires.
-- **Doctors**: create, edit and delete doctors. The list has search, filters (specialization, hospital, join-date range), sorting and pagination. Each doctor has a profile page with patient stats, and you can add patients to a doctor or remove them from that doctor's list.
+- **Doctors**: create, edit and delete doctors. The list has search, filters (specialization, hospital, join-date range), sorting (newest, name, or most / fewest patients, also by clicking the Patients column) and pagination. Each doctor has a profile page with patient stats, and you can add patients to a doctor or remove them from that doctor's list.
 - **Patients**: a dedicated page listing every patient, with edit (including moving a patient to another doctor) and delete. Search covers name, phone, email and diagnosis. Filters cover condition, gender, admission-date range and age range, with six sort orders and pagination.
 - **Dashboard**: totals, new admissions compared with the previous period, admissions over time (per day, week or month), patients by condition, top 10 doctors by caseload, doctors by specialization, and age and gender breakdowns. You can switch between 7-day, 30-day, 90-day and 12-month ranges.
 - **UX**: responsive layout (sidebar on desktop, drawer and cards on mobile), light/dark/system themes, skeleton loaders, empty and error states, toasts, confirmation dialogs, keyboard-accessible dialogs and combobox, and filter state stored in the URL so views can be shared.
@@ -143,7 +152,7 @@ flowchart LR
 4. Express runs `helmet`, `cors`, the rate limiter, then `requireAuth`, which verifies the JWT (HS256, issuer and audience) and sets `req.user`.
 5. `validate(listPatientsSchema)` runs **Zod**: it coerces and checks the query string, rejects bad input with a `400` and field-level details, and the controller only ever sees typed data.
 6. `patient.service` builds an indexed filter. `find()` (with sort, skip, limit and `lean`) and `countDocuments()` run **in parallel**, and the doctor names are joined in one batched query (`populate`, which uses `$in`).
-7. MongoDB answers from the `{ condition: 1, admissionDate: -1 }` compound index, with no collection scan and no in-memory sort. The tests check this with `explain()`.
+7. MongoDB answers from the `{ condition: 1, admissionDate: -1, _id: -1 }` compound index. It reads exactly the 10 rows on the page in order, with no collection scan and no in-memory sort. The tests check this with `explain()`.
 8. The response comes back as `{ data, meta: { page, limit, total, totalPages, ... } }`. The table re-renders only the rows that changed, because rows are memoized and callbacks are stable.
 
 Writes (create, update, delete) invalidate the affected query keys (patients, doctors and dashboard), so every view refreshes itself.
@@ -199,7 +208,7 @@ All routes are under `/api`. Every route except `/auth/login` and `/auth/logout`
 | `POST` | `/auth/logout` | Clear the session cookie |
 | `GET` | `/auth/me` | Current user |
 | `GET` | `/dashboard/stats?range=7d\|30d\|90d\|12m` | All dashboard analytics in one call |
-| `GET` | `/doctors?page&limit&q&specialization&hospital&from&to&sort` | Paginated, searchable, filterable list (with `patientCount`) |
+| `GET` | `/doctors?page&limit&q&specialization&hospital&from&to&sort` | Paginated, searchable, filterable list (with `patientCount`). `sort`: `newest`, `oldest`, `name_asc`, `name_desc`, `patients_desc`, `patients_asc` |
 | `GET` | `/doctors/facets` | Distinct specializations and hospitals (for filter dropdowns) |
 | `GET` | `/doctors/options?q&limit` | Lightweight searchable list for the doctor picker |
 | `POST` 🔒 | `/doctors` | Create a doctor |
@@ -257,10 +266,11 @@ A case-insensitive "contains" regex cannot use an index, so it scans the whole c
 
 ### Other performance and scalability choices
 
-- **Every index serves a specific query** and follows ESR (Equality, Sort, Range), for example `{ doctor: 1, admissionDate: -1 }` and `{ condition: 1, admissionDate: -1 }`. `_id` is always the last sort key so pages stay stable.
-- **No N+1 queries:** patient counts for a page of doctors come from one `$group` aggregation, and doctor names on patient rows come from one batched `$in` lookup.
+- **Every index serves a specific query** and follows ESR (Equality, Sort, Range), for example `{ doctor: 1, admissionDate: -1, _id: -1 }` and `{ condition: 1, admissionDate: -1, _id: -1 }`. `_id` is the last sort key so pages stay stable, and it is also the last index key, so MongoDB streams a page straight from the index instead of reading every match and sorting in memory. On Atlas this cut "critical patients, latest first" from 117 documents read to 10, and the age sort from a full collection scan to 24.
+- **Denormalised caseload counter:** each doctor stores `patientCount`, updated atomically with `$inc` whenever a patient is added, deleted or moved to another doctor. Doctor lists can therefore sort by most or fewest patients straight from the `{ patientCount: -1, _id: -1 }` index (10 documents read for a page), the list needs no extra counting query, and the dashboard's top-10 caseloads is an index read instead of a `$group` over every patient. `npm run db:recount` rebuilds the counters if they ever drift.
+- **No N+1 queries:** doctor names on patient rows come from one batched `$in` lookup per page.
 - **Parallel queries:** the page query and the count query run in parallel. With no filters, the count uses `estimatedDocumentCount()` (O(1) collection metadata).
-- **Dashboard:** about 9 independent queries run in parallel. The three patient breakdowns share a single `$facet`, so the collection is read once. The top-10 caseload query groups first and then `$lookup`s only 10 doctors, and empty time buckets are filled in so the timeline has no gaps.
+- **Dashboard:** about 9 independent queries run in parallel. The three patient breakdowns share a single `$facet`, so the collection is read once. The top-10 caseloads are read from the `patientCount` index, and empty time buckets are filled in so the timeline has no gaps.
 - **Frontend:** Recharts is code-split with `next/dynamic` and loads only on the dashboard. Page shells are prerendered with Cache Components. Table rows are memoized with stable callbacks.
 - **Scaling:** the API is stateless (JWT), so Cloud Run can scale horizontally. Each instance keeps one pooled Mongo connection (`maxPoolSize: 10`) and shuts down cleanly on SIGTERM. Next steps at larger scale: cursor-based pagination for deep pages, a materialized view refreshed with `$merge` for dashboard stats, and Atlas Search.
 
@@ -288,9 +298,9 @@ A case-insensitive "contains" regex cannot use an index, so it scans the whole c
 
 ### Mobile
 
-| Login | Dashboard | Navigation | Doctors | Patients |
+| Login | Dashboard | Account menu | Doctors | Patients |
 | --- | --- | --- | --- | --- |
-| ![](docs/screenshots/mobile-login.png) | ![](docs/screenshots/mobile-dashboard.png) | ![](docs/screenshots/mobile-nav.png) | ![](docs/screenshots/mobile-doctors.png) | ![](docs/screenshots/mobile-patients.png) |
+| ![](docs/screenshots/mobile-login.png) | ![](docs/screenshots/mobile-dashboard.png) | ![](docs/screenshots/mobile-account.png) | ![](docs/screenshots/mobile-doctors.png) | ![](docs/screenshots/mobile-patients.png) |
 
 ---
 

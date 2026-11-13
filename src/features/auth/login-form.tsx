@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Eye, EyeOff, LogIn, ShieldCheck } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -19,7 +19,7 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>;
 
 const DEMO_ACCOUNTS = [
-  { label: "Admin", hint: "Full access", email: "admin@doctortracker.dev", password: "Admin@12345" },
+  { label: "Administrator", hint: "Can add, edit and delete", email: "admin@doctortracker.dev", password: "Admin@12345" },
   { label: "Viewer", hint: "Read-only", email: "viewer@doctortracker.dev", password: "Viewer@12345" },
 ];
 const SHOW_DEMO = process.env.NEXT_PUBLIC_SHOW_DEMO_ACCOUNTS !== "false";
@@ -47,7 +47,6 @@ export function LoginForm() {
     login.mutate(values, {
       onSuccess: () => {
         router.replace(safeNext(searchParams.get("next")));
-        router.refresh();
       },
     });
   });
@@ -56,17 +55,17 @@ export function LoginForm() {
     login.error instanceof ApiError ? login.error.message : login.error ? "Unable to sign in. Please try again." : null;
 
   return (
-    <div className="w-full max-w-sm">
-      <h1 className="text-2xl font-bold tracking-tight">Welcome back</h1>
-      <p className="mt-1.5 text-sm text-muted-foreground">Sign in to manage doctors, patients and analytics.</p>
+    <div className="w-full max-w-[22rem]">
+      <h1 className="font-display text-[40px] leading-none font-bold">Sign in</h1>
+      <p className="mt-3 text-[15px] text-muted-foreground">Use your hospital admin account.</p>
 
       {sessionExpired && !serverError && (
-        <p className="mt-6 rounded-lg border border-warning/30 bg-warning-soft px-3 py-2.5 text-sm">
-          Your session has expired. Please sign in again.
+        <p className="mt-6 border-l-4 border-warning bg-warning-soft px-3 py-2.5 text-sm">
+          Your session expired. Sign in again to continue where you left off.
         </p>
       )}
       {serverError && (
-        <p role="alert" className="mt-6 rounded-lg border border-destructive/30 bg-destructive-soft px-3 py-2.5 text-sm font-medium text-destructive">
+        <p role="alert" className="mt-6 border-l-4 border-destructive bg-destructive-soft px-3 py-2.5 text-sm font-semibold text-destructive">
           {serverError}
         </p>
       )}
@@ -89,7 +88,7 @@ export function LoginForm() {
             <button
               type="button"
               onClick={() => setShowPassword((s) => !s)}
-              className="absolute top-1/2 right-2 -translate-y-1/2 rounded-md p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
+              className="absolute top-1/2 right-2 -translate-y-1/2 rounded-[4px] p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
               {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
@@ -98,32 +97,30 @@ export function LoginForm() {
         </Field>
 
         <Button type="submit" size="lg" loading={login.isPending} className="mt-2 w-full">
-          {!login.isPending && <LogIn />}
           Sign in
         </Button>
       </form>
 
       {SHOW_DEMO && (
-        <div className="mt-8 rounded-xl border border-dashed bg-muted/40 p-4">
-          <p className="flex items-center gap-1.5 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
-            <ShieldCheck className="size-3.5" /> Demo accounts
-          </p>
-          <div className="mt-3 grid grid-cols-2 gap-2">
+        <div className="mt-10 border-t pt-5">
+          <p className="text-sm text-muted-foreground">Exploring the demo? Fill in a sample account:</p>
+          <ul className="mt-3 divide-y border-y">
             {DEMO_ACCOUNTS.map((account) => (
-              <button
-                key={account.email}
-                type="button"
-                onClick={() => {
-                  setValue("email", account.email, { shouldValidate: true });
-                  setValue("password", account.password, { shouldValidate: true });
-                }}
-                className="rounded-lg border bg-card px-3 py-2 text-left transition-colors hover:border-primary/50 hover:bg-primary-soft focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
-              >
-                <span className="block text-sm font-semibold">{account.label}</span>
-                <span className="block text-xs text-muted-foreground">{account.hint}</span>
-              </button>
+              <li key={account.email}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setValue("email", account.email, { shouldValidate: true });
+                    setValue("password", account.password, { shouldValidate: true });
+                  }}
+                  className="flex w-full items-baseline justify-between gap-4 py-2.5 text-left hover:text-primary"
+                >
+                  <span className="font-bold">{account.label}</span>
+                  <span className="text-[13px] text-muted-foreground">{account.hint}</span>
+                </button>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       )}
     </div>

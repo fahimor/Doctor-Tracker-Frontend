@@ -3,8 +3,8 @@ import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const fieldBase =
-  "w-full rounded-lg border border-input bg-card text-sm text-foreground shadow-xs transition-colors placeholder:text-muted-foreground/70 " +
-  "hover:border-muted-foreground/40 focus-visible:border-primary focus-visible:ring-3 focus-visible:ring-ring/25 focus-visible:outline-none " +
+  "w-full rounded-[5px] border border-input bg-card text-[15px] text-foreground transition-colors placeholder:text-muted-foreground/70 " +
+  "hover:border-foreground/40 focus-visible:border-primary focus-visible:ring-3 focus-visible:ring-primary/15 focus-visible:outline-none " +
   "disabled:cursor-not-allowed disabled:opacity-60 aria-invalid:border-destructive aria-invalid:focus-visible:ring-destructive/20";
 
 export function Input({ className, ...props }: InputHTMLAttributes<HTMLInputElement>) {

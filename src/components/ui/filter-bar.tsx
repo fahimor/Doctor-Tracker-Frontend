@@ -30,12 +30,12 @@ export function FilterBar({ search, sort, activeCount, onReset, children }: Filt
             variant="outline"
             onClick={() => setOpen((o) => !o)}
             aria-expanded={open}
-            className={cn(open && "border-primary/40 bg-primary-soft text-accent-foreground hover:bg-primary-soft")}
+            className={cn(open && "border-foreground/50 bg-muted")}
           >
             <SlidersHorizontal />
             Filters
             {activeCount > 0 && (
-              <span className="flex size-5 items-center justify-center rounded-full bg-primary text-[11px] font-bold text-primary-foreground">
+              <span className="flex h-5 min-w-5 items-center justify-center rounded-[3px] bg-primary px-1 text-xs font-bold text-primary-foreground">
                 {activeCount}
               </span>
             )}
@@ -44,9 +44,9 @@ export function FilterBar({ search, sort, activeCount, onReset, children }: Filt
       </div>
 
       {open && (
-        <div className="mt-4 grid animate-fade-in gap-3 rounded-xl border bg-muted/40 p-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-4 grid gap-x-4 gap-y-3 border-t pt-4 sm:grid-cols-2 lg:grid-cols-4">
           {children}
-          <div className="flex items-end sm:col-span-2 lg:col-span-4 lg:justify-end">
+          <div className="flex items-end">
             <Button variant="ghost" size="sm" onClick={onReset} disabled={activeCount === 0}>
               <RotateCcw />
               Clear filters
@@ -62,7 +62,7 @@ export function FilterBar({ search, sort, activeCount, onReset, children }: Filt
 export function FilterField({ label, htmlFor, children, className }: { label: string; htmlFor: string; children: ReactNode; className?: string }) {
   return (
     <div className={cn("flex flex-col gap-1.5", className)}>
-      <label htmlFor={htmlFor} className="text-xs font-semibold text-muted-foreground">
+      <label htmlFor={htmlFor} className="text-[13px] text-muted-foreground">
         {label}
       </label>
       {children}

@@ -7,7 +7,7 @@ export const metadata: Metadata = { title: "Doctor" };
 
 export default function DoctorPage() {
   return (
-    <Suspense fallback={<Skeleton className="h-64 w-full rounded-2xl" />}>
+    <Suspense fallback={<Skeleton className="h-64 w-full" />}>
       <DoctorRoute />
     </Suspense>
   );

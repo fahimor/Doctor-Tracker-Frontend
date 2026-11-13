@@ -178,12 +178,11 @@ function PatientForm({
               <input type="radio" value={c.value} className="peer sr-only" {...register("condition")} />
               <span
                 className={cn(
-                  "inline-flex items-center gap-2 rounded-lg border px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors",
-                  "peer-checked:border-transparent peer-checked:text-foreground peer-checked:ring-2 peer-focus-visible:ring-2 peer-focus-visible:ring-ring hover:bg-muted",
+                  "inline-flex items-center gap-2 rounded-[5px] border px-3 py-1.5 text-sm text-muted-foreground transition-colors",
+                  "peer-checked:border-foreground peer-checked:font-bold peer-checked:text-foreground peer-focus-visible:outline-2 peer-focus-visible:outline-ring hover:bg-muted",
                 )}
-                style={{ ["--tw-ring-color" as string]: c.color }}
               >
-                <span className="size-2 rounded-full" style={{ background: c.color }} aria-hidden />
+                <span className="h-3.5 w-1.5 rounded-[1px]" style={{ background: c.color }} aria-hidden />
                 {c.label}
               </span>
             </label>
@@ -209,7 +208,7 @@ function PatientForm({
         </Field>
       )}
 
-      <Field label="Notes" htmlFor="p-notes" error={errors.notes?.message} hint="Optional — allergies, follow-ups, etc." className="sm:col-span-6">
+      <Field label="Notes" htmlFor="p-notes" error={errors.notes?.message} hint="Optional. Allergies, follow-ups and similar." className="sm:col-span-6">
         <Textarea rows={3} placeholder="Add any relevant clinical notes" {...fieldAria("p-notes", errors.notes?.message)} {...register("notes")} />
       </Field>
     </form>

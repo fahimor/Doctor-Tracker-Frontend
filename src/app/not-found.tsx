@@ -1,17 +1,13 @@
-import { Compass } from "lucide-react";
 import Link from "next/link";
 import { buttonClasses } from "@/components/ui/button";
 
 export default function NotFound() {
   return (
-    <main className="flex min-h-dvh flex-col items-center justify-center px-6 text-center">
-      <div className="mb-5 flex size-14 items-center justify-center rounded-2xl bg-primary-soft text-primary">
-        <Compass className="size-7" aria-hidden />
-      </div>
-      <p className="text-sm font-semibold text-primary">404</p>
-      <h1 className="mt-1 text-2xl font-bold tracking-tight">Page not found</h1>
-      <p className="mt-2 max-w-sm text-sm text-muted-foreground">The page you&apos;re looking for doesn&apos;t exist or has been moved.</p>
-      <Link href="/dashboard" className={buttonClasses({ className: "mt-6" })}>
+    <main className="flex min-h-dvh flex-col justify-center px-6 sm:px-16">
+      <p className="font-display text-[7rem] leading-none font-extrabold text-primary">404</p>
+      <h1 className="mt-2 text-2xl font-bold">This page doesn&apos;t exist</h1>
+      <p className="mt-2 max-w-sm text-muted-foreground">Check the address, or head back to the dashboard.</p>
+      <Link href="/dashboard" className={buttonClasses({ className: "mt-6 self-start" })}>
         Back to dashboard
       </Link>
     </main>

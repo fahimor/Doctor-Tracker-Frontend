@@ -48,7 +48,7 @@ export function Dialog({ open, onClose, title, description, children, footer, si
         if (e.target === e.currentTarget && dismissible) onClose();
       }}
       className={cn(
-        "m-auto w-[calc(100%-2rem)] rounded-2xl border bg-card p-0 text-card-foreground shadow-pop backdrop:bg-transparent",
+        "m-auto w-[calc(100%-2rem)] rounded-sheet border bg-card p-0 text-card-foreground shadow-pop",
         "max-h-[calc(100dvh-2rem)] overflow-hidden open:animate-dialog-in",
         widths[size],
       )}
@@ -57,7 +57,7 @@ export function Dialog({ open, onClose, title, description, children, footer, si
         <div className="flex max-h-[calc(100dvh-2rem)] flex-col">
           <header className="flex items-start justify-between gap-4 border-b px-6 py-4">
             <div>
-              <h2 id={titleId} className="text-base font-semibold tracking-tight">
+              <h2 id={titleId} className="font-display text-2xl leading-tight font-bold">
                 {title}
               </h2>
               {description && (
@@ -70,14 +70,14 @@ export function Dialog({ open, onClose, title, description, children, footer, si
               type="button"
               onClick={onClose}
               disabled={!dismissible}
-              className="-mr-2 rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none disabled:opacity-50"
+              className="-mr-2 rounded-[5px] p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:opacity-50"
               aria-label="Close dialog"
             >
               <X className="size-4" />
             </button>
           </header>
           <div className="overflow-y-auto px-6 py-5">{children}</div>
-          {footer && <footer className="flex flex-col-reverse gap-2 border-t bg-muted/40 px-6 py-4 sm:flex-row sm:justify-end">{footer}</footer>}
+          {footer && <footer className="flex flex-col-reverse gap-2 border-t px-6 py-4 sm:flex-row sm:justify-end">{footer}</footer>}
         </div>
       )}
     </dialog>

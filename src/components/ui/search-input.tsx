@@ -1,8 +1,7 @@
 "use client";
 
 import { Search, X } from "lucide-react";
-import { useEffect, useEffectEvent, useState } from "react";
-import { useDebouncedValue } from "@/hooks/use-debounced-value";
+import { useDebouncedCommit } from "@/hooks/use-debounced-commit";
 import { cn } from "@/lib/utils";
 
 interface SearchInputProps {
@@ -19,24 +18,7 @@ interface SearchInputProps {
  * per keystroke.
  */
 export function SearchInput({ value, onChange, placeholder = "Search…", className, label = "Search" }: SearchInputProps) {
-  const [text, setText] = useState(value);
-  const debounced = useDebouncedValue(text, 300);
-
-  // Sync when the URL changes from elsewhere (e.g. "Clear filters").
-  const [prevValue, setPrevValue] = useState(value);
-  if (value !== prevValue) {
-    setPrevValue(value);
-    setText(value);
-  }
-
-  // Reads the latest `value`/`onChange` without re-running the effect for them.
-  const commit = useEffectEvent((next: string) => {
-    if (next !== value) onChange(next);
-  });
-
-  useEffect(() => {
-    commit(debounced.trim());
-  }, [debounced]);
+  const [text, setText] = useDebouncedCommit(value, onChange, 300);
 
   return (
     <div className={cn("relative", className)}>
@@ -47,7 +29,7 @@ export function SearchInput({ value, onChange, placeholder = "Search…", classN
         onChange={(e) => setText(e.target.value)}
         placeholder={placeholder}
         aria-label={label}
-        className="h-10 w-full rounded-lg border border-input bg-card pr-9 pl-9 text-sm shadow-xs transition-colors placeholder:text-muted-foreground/70 hover:border-muted-foreground/40 focus-visible:border-primary focus-visible:ring-3 focus-visible:ring-ring/25 focus-visible:outline-none [&::-webkit-search-cancel-button]:hidden"
+        className="h-10 w-full rounded-[5px] border border-input bg-card pr-9 pl-9 text-[15px] transition-colors placeholder:text-muted-foreground/70 hover:border-foreground/40 focus-visible:border-primary focus-visible:ring-3 focus-visible:ring-primary/15 focus-visible:outline-none [&::-webkit-search-cancel-button]:hidden"
       />
       {text && (
         <button

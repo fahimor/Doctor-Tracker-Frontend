@@ -18,11 +18,9 @@ interface EmptyStateProps {
 
 export function EmptyState({ icon: Icon, title, description, action, className }: EmptyStateProps) {
   return (
-    <div className={cn("flex flex-col items-center justify-center px-6 py-14 text-center", className)}>
-      <div className="mb-4 flex size-12 items-center justify-center rounded-2xl bg-primary-soft text-primary">
-        <Icon className="size-6" aria-hidden />
-      </div>
-      <h3 className="text-sm font-semibold text-foreground">{title}</h3>
+    <div className={cn("flex flex-col items-start px-6 py-12 sm:px-8", className)}>
+      <Icon className="mb-3 size-7 text-muted-foreground" strokeWidth={1.5} aria-hidden />
+      <h3 className="text-base font-bold text-foreground">{title}</h3>
       {description && <p className="mt-1 max-w-sm text-sm text-muted-foreground">{description}</p>}
       {action && <div className="mt-5">{action}</div>}
     </div>
@@ -31,11 +29,9 @@ export function EmptyState({ icon: Icon, title, description, action, className }
 
 export function ErrorState({ message, onRetry, className }: { message: string; onRetry?: () => void; className?: string }) {
   return (
-    <div role="alert" className={cn("flex flex-col items-center justify-center px-6 py-14 text-center", className)}>
-      <div className="mb-4 flex size-12 items-center justify-center rounded-2xl bg-destructive-soft text-destructive">
-        <AlertTriangle className="size-6" aria-hidden />
-      </div>
-      <h3 className="text-sm font-semibold">Something went wrong</h3>
+    <div role="alert" className={cn("flex flex-col items-start px-6 py-12 sm:px-8", className)}>
+      <AlertTriangle className="mb-3 size-7 text-destructive" strokeWidth={1.5} aria-hidden />
+      <h3 className="text-base font-bold">Couldn&apos;t load this data</h3>
       <p className="mt-1 max-w-sm text-sm text-muted-foreground">{message}</p>
       {onRetry && (
         <Button variant="outline" size="sm" className="mt-5" onClick={onRetry}>

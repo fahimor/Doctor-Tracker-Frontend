@@ -33,16 +33,16 @@ export const Pagination = memo(function Pagination({ meta, onPageChange, onLimit
   const start = total === 0 ? 0 : (page - 1) * limit + 1;
   const end = Math.min(page * limit, total);
   const navBtn =
-    "inline-flex size-8 items-center justify-center rounded-lg text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none disabled:pointer-events-none disabled:opacity-40";
+    "inline-flex size-8 items-center justify-center rounded-[4px] text-sm transition-colors disabled:pointer-events-none disabled:opacity-40";
 
   return (
     <div className="flex flex-col items-center justify-between gap-3 border-t px-4 py-3 sm:flex-row sm:px-5">
       <div className="flex items-center gap-3 text-sm text-muted-foreground">
         <span>
-          <span className="font-semibold text-foreground tabular-nums">
+          <span className="font-bold text-foreground tabular-nums">
             {formatNumber(start)}–{formatNumber(end)}
           </span>{" "}
-          of <span className="font-semibold text-foreground tabular-nums">{formatNumber(total)}</span> {noun}
+          of <span className="tabular-nums">{formatNumber(total)}</span> {noun}
         </span>
         {onLimitChange && (
           <label className="hidden items-center gap-2 sm:flex">
@@ -50,7 +50,7 @@ export const Pagination = memo(function Pagination({ meta, onPageChange, onLimit
             <select
               value={limit}
               onChange={(e) => onLimitChange(Number(e.target.value))}
-              className="h-8 cursor-pointer rounded-lg border border-input bg-card px-2 text-sm text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+              className="h-8 cursor-pointer rounded-[4px] border border-input bg-card px-2 text-sm text-foreground"
             >
               {PAGE_SIZE_OPTIONS.map((n) => (
                 <option key={n} value={n}>
@@ -86,7 +86,7 @@ export const Pagination = memo(function Pagination({ meta, onPageChange, onLimit
               className={cn(
                 navBtn,
                 "tabular-nums",
-                p === page ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                p === page ? "bg-foreground font-bold text-background" : "text-muted-foreground hover:bg-muted hover:text-foreground",
               )}
             >
               {p}

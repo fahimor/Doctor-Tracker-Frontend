@@ -1,23 +1,22 @@
-import { HeartPulse } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export function Logo({ className, inverted }: { className?: string; inverted?: boolean }) {
+/**
+ * Typographic wordmark: condensed Archivo, stacked, with a small ward-green
+ * block standing in for a file tab. No pictogram needed.
+ */
+export function Logo({ className, inline = false }: { className?: string; inline?: boolean }) {
   return (
-    <span className={cn("inline-flex items-center gap-2.5", className)}>
-      <span
-        className={cn(
-          "flex size-9 items-center justify-center rounded-xl shadow-sm",
-          inverted ? "bg-white/15 text-white ring-1 ring-white/25" : "bg-primary text-primary-foreground",
-        )}
-      >
-        <HeartPulse className="size-5" aria-hidden />
-      </span>
-      <span className={cn("text-[15px] leading-tight font-bold tracking-tight", inverted ? "text-white" : "text-foreground")}>
-        Doctor Tracker
-        <span className={cn("block text-[11px] font-medium", inverted ? "text-white/70" : "text-muted-foreground")}>
-          Clinical admin portal
+    <span className={cn("font-display inline-flex items-center gap-2 leading-[0.9] font-extrabold", className)}>
+      <span className="h-[1.6em] w-[0.35em] shrink-0 rounded-[2px] bg-[#3fb489]" aria-hidden />
+      {inline ? (
+        <span>Doctor Tracker</span>
+      ) : (
+        <span>
+          Doctor
+          <br />
+          Tracker
         </span>
-      </span>
+      )}
     </span>
   );
 }

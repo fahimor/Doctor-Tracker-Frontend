@@ -2,7 +2,6 @@
 
 import { Check, ChevronsUpDown, Loader2, Search } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
-import { Avatar } from "@/components/ui/avatar";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { cn } from "@/lib/utils";
 import type { DoctorSummary } from "@/types/api";
@@ -74,7 +73,7 @@ export function DoctorCombobox({ id, value, onChange, invalid, describedBy }: Do
     <div ref={rootRef} className="relative">
       <div
         className={cn(
-          "flex h-10 w-full items-center gap-2 rounded-lg border border-input bg-card px-3 text-sm shadow-xs transition-colors focus-within:border-primary focus-within:ring-3 focus-within:ring-ring/25",
+          "flex h-10 w-full items-center gap-2 rounded-[5px] border border-input bg-card px-3 text-[15px] transition-colors focus-within:border-primary focus-within:ring-3 focus-within:ring-primary/15",
           invalid && "border-destructive focus-within:ring-destructive/20",
         )}
         onClick={() => {
@@ -82,7 +81,7 @@ export function DoctorCombobox({ id, value, onChange, invalid, describedBy }: Do
           inputRef.current?.focus();
         }}
       >
-        {open ? <Search className="size-4 shrink-0 text-muted-foreground" aria-hidden /> : value && <Avatar name={value.name} className="size-6 text-[10px]" />}
+        {open && <Search className="size-4 shrink-0 text-muted-foreground" aria-hidden />}
         <input
           ref={inputRef}
           id={id}
@@ -116,7 +115,7 @@ export function DoctorCombobox({ id, value, onChange, invalid, describedBy }: Do
         <ul
           id={listId}
           role="listbox"
-          className="absolute z-20 mt-1.5 max-h-64 w-full overflow-y-auto rounded-xl border bg-card p-1 shadow-pop animate-fade-in"
+          className="absolute z-20 mt-1 max-h-64 w-full overflow-y-auto rounded-[5px] border bg-card py-1 shadow-pop"
         >
           {options.length === 0 && !isFetching && <li className="px-3 py-6 text-center text-sm text-muted-foreground">No doctors found</li>}
           {options.map((doctor, index) => {
@@ -130,13 +129,12 @@ export function DoctorCombobox({ id, value, onChange, invalid, describedBy }: Do
                 onPointerDown={(e) => e.preventDefault()}
                 onClick={() => select(doctor)}
                 onMouseEnter={() => setActive(index)}
-                className={cn("flex cursor-pointer items-center gap-3 rounded-lg px-2.5 py-2", index === active && "bg-muted")}
+                className={cn("flex cursor-pointer items-center gap-3 px-3 py-2", index === active && "bg-primary-soft")}
               >
-                <Avatar name={doctor.name} className="size-8 text-[11px]" />
                 <span className="min-w-0 flex-1">
-                  <span className="block truncate text-sm font-semibold">{doctor.name}</span>
+                  <span className="block truncate font-bold">{doctor.name}</span>
                   <span className="block truncate text-xs text-muted-foreground">
-                    {doctor.specialization} · {doctor.hospital}
+                    {doctor.specialization}, {doctor.hospital}
                   </span>
                 </span>
                 {selected && <Check className="size-4 text-primary" aria-hidden />}

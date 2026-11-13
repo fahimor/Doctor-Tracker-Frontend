@@ -46,6 +46,7 @@ export function DoctorsView() {
   const onDelete = useCallback((doctor: DoctorListItem) => setToDelete(doctor), []);
   const onPageChange = useCallback((page: number) => setFilters({ page: String(page) }), [setFilters]);
   const onLimitChange = useCallback((limit: number) => setFilters({ limit: String(limit) }), [setFilters]);
+  const onSortChange = useCallback((sort: string) => setFilters({ sort }), [setFilters]);
 
   const hasFilters = activeCount > 0 || Boolean(f.q);
 
@@ -142,7 +143,7 @@ export function DoctorsView() {
             )
           ) : (
             <>
-              <DoctorsTable doctors={data.data} canEdit={isAdmin} onEdit={onEdit} onDelete={onDelete} />
+              <DoctorsTable doctors={data.data} canEdit={isAdmin} onEdit={onEdit} onDelete={onDelete} sort={f.sort} onSortChange={onSortChange} />
               <Pagination meta={data.meta} onPageChange={onPageChange} onLimitChange={onLimitChange} noun="doctors" />
             </>
           )}

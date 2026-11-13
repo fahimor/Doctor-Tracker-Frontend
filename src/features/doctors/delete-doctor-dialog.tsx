@@ -39,7 +39,7 @@ export function DeleteDoctorDialog({ doctor, patientCount, onClose, onDeleted }:
         <>
           <span className="font-semibold text-foreground">{doctor?.name}</span> will be permanently removed.
           {count > 0 && (
-            <span className="mt-3 block rounded-lg border border-destructive/25 bg-destructive-soft px-3 py-2 font-medium text-destructive">
+            <span className="mt-3 block border-l-4 border-destructive bg-destructive-soft px-3 py-2 font-semibold text-destructive">
               Their {pluralize(count, "patient")} will also be deleted.
             </span>
           )}

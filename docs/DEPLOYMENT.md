@@ -31,7 +31,7 @@ npm install
 npm run seed                # creates admin/viewer users, 48 doctors, 1,600 patients
 ```
 
-The seed **wipes the doctors and patients collections**. It refuses to run when `NODE_ENV=production` unless you pass `--force`.
+The seed **wipes the doctors and patients collections**. If you change an index definition later, run `npm run db:indexes` against the same database: it creates new indexes and drops ones the code no longer defines. For a database seeded before the patient-count sort existed, also run `npm run db:recount` once to fill in each doctor's `patientCount`. It refuses to run when `NODE_ENV=production` unless you pass `--force`.
 
 ---
 

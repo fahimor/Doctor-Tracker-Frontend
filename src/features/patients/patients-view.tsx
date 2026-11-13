@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { DebouncedInput } from "@/components/ui/debounced-input";
 import { EmptyState, ErrorState, ProgressBar } from "@/components/ui/feedback";
 import { FilterBar, FilterField } from "@/components/ui/filter-bar";
 import { Input, Select } from "@/components/ui/input";
@@ -149,9 +150,9 @@ export function PatientsView({ doctor, showAddButton = false }: PatientsViewProp
           </FilterField>
           <FilterField label="Age range" htmlFor="f-min-age" className="sm:col-span-2 lg:col-span-1">
             <div className="flex items-center gap-2">
-              <Input id="f-min-age" type="number" min={0} max={130} placeholder="Min" value={f.minAge} onChange={(e) => setFilters({ minAge: e.target.value })} aria-label="Minimum age" />
+              <DebouncedInput id="f-min-age" type="number" inputMode="numeric" min={0} max={130} placeholder="Min" value={f.minAge} onCommit={(minAge) => setFilters({ minAge })} aria-label="Minimum age" />
               <span className="text-muted-foreground">–</span>
-              <Input type="number" min={0} max={130} placeholder="Max" value={f.maxAge} onChange={(e) => setFilters({ maxAge: e.target.value })} aria-label="Maximum age" />
+              <DebouncedInput type="number" inputMode="numeric" min={0} max={130} placeholder="Max" value={f.maxAge} onCommit={(maxAge) => setFilters({ maxAge })} aria-label="Maximum age" />
             </div>
           </FilterField>
         </FilterBar>
